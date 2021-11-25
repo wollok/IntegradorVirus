@@ -1,0 +1,74 @@
+import computadora.*
+import programas.*
+
+describe "TESTEOS DE PROGRAMA"{
+	const windows = new SistemaOperativo(memoria = 2, disco = 2)
+	const miPc = new Computadora(sistemaOperativo = windows, discoTotal = 150, memoriaTotal = 8)
+	const chrome= new Programa(memoria = 1, disco = 2)
+	const wollok= new Programa(memoria = 1, disco = 4)
+	const discord= new Programa(memoria = 2, disco = 6)
+	const wow= new Programa(memoria = 4, disco = 60)
+	const troyano1= new Troyano(disco=2, memoria = 1)
+	const virus1 = new Virus(disco = 2, memoria = 0.25, potencia=1, descripcion = "W32.antipdepv")
+	const destructor1 = new Destructor(disco = 3, memoria = 1)
+	
+	test "ejecutar windows"	{
+		miPc.ejecutar(windows)
+		assert.equals([windows], miPc.programasEnEjecucion())
+	}
+	test "instalar programas" {
+		miPc.ejecutar(windows)
+		miPc.instalar(chrome)
+		miPc.instalar(wollok)
+		miPc.instalar(discord)
+		miPc.instalar(wow)
+		assert.equals([chrome, wollok, discord, wow], miPc.programasInstalados())
+	}
+	test "ejecutar programas" {
+		miPc.ejecutar(windows)
+		miPc.instalar(chrome)
+		miPc.instalar(wollok)
+		miPc.instalar(discord)
+		miPc.instalar(wow)
+		miPc.ejecutar(chrome)
+		miPc.ejecutar(wollok)
+		miPc.ejecutar(discord)
+		miPc.ejecutar(wow)
+		assert.equals([windows, chrome, wollok, discord, wow], miPc.programasEnEjecucion())
+	}
+	test "infectar wow con troyano"	{
+		miPc.ejecutar(windows)
+		miPc.instalar(wow)
+		wow.hospedar(troyano1)
+		miPc.ejecutar(wow)
+		assert.equals(86, miPc.discoDisponible())
+		assert.equals(8 - (2 + 4 + 1), miPc.memoriaDisponible())
+		assert.that(miPc.vulnerable())
+	}
+	test "infectar wow con virus"	{
+		miPc.ejecutar(windows)
+		miPc.instalar(wollok)
+		miPc.instalar(wow)
+		miPc.ejecutar(wollok)
+		miPc.detener(wollok)
+		miPc.ejecutar(wollok)
+		wow.hospedar(virus1)
+		miPc.ejecutar(wow)
+		assert.equals([virus1], wow.hospedados())
+		assert.equals(2, wollok.ejecuciones())
+		assert.equals([virus1], wollok.hospedados())
+		assert.equals(80, miPc.discoDisponible())
+		assert.equals([windows, wollok, wow, virus1], miPc.programasEnEjecucion())
+		assert.equals(8 - (2 + 1 + 4 + 0.25) ,miPc.memoriaDisponible())
+	} 
+
+	test "infectar wow con destructor"	{
+		miPc.ejecutar(windows)
+		miPc.instalar(wollok)
+		miPc.instalar(wow)
+		wow.hospedar(destructor1)
+		miPc.ejecutar(wow)
+		assert.equals(1,miPc.programasInstalados().size())
+	}
+	
+}
