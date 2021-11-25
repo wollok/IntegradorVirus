@@ -57,4 +57,5 @@ Instalar y ejecutar un antivirus y que hagan lo esperado
 Sin escribir todo el código nuevo, explicar y definir al menos 2 conceptos de la materia nos podrían servir para que se pueda
 - soportar un nuevo tipo de destructor que sobrevive hasta N corridas de antivirus
 - soportar un nuevo tipo de troyano que sólo puede ser eliminado si ya corrió y explicar brevemente cómo se implementaría considerando ambos conceptos
+
 ¿Qué pasaría si los programas maliciosos o los mismos antivirus pudieran infectarse por otros programas maliciosos, que también se ejecuten automáticamente y consuman recursos? ¿Qué cambios habría que hacer para que esto funcione?
